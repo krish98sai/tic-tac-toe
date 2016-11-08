@@ -1,0 +1,30 @@
+These are notes and methods necessary for each program
+
+TicTacToePvP
+
+Procedure:
+1. Print game board.
+2. Player one chooses where to place their mark.
+3. Check for a win.
+4. Player two chooses where to place their mark.
+5. Check for a win.
+6. Repeat until someone wins.
+
+Methods:
+printBoard() - Print the current state of the tic tac toe game board.
+playTurn() - Player places their mark wherever they choose.
+switchPlayer() - Sets the marker from "O" to "X", vise versa.
+checkWin() - Check rows, columns, and diagonals to see if someone has won.
+
+TicTacToePvE
+
+Procedure:
+
+Methods:
+
+
+TicTacToePvE3D
+
+Procedure:
+
+Methods
