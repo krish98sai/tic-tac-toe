@@ -1,63 +1,83 @@
 /**
- * Created by krish98sai on 11/8/2016.
+ * TicTacToePvP
+ * This program is a game of TicTacToe between two players.
+ *
+ * Author: Saikrishna Rao (sakrao@ucsc.edu)
  */
 
 import java.util.Scanner;
 
 public class TicTacToePvP {
+
+    private static int size = 3;
+
     public static void main(String[] args){
 
-        //Initialize variables
-        String[][] gameBoard = {
-                {"-", "-", "-"},
-                {"-", "-", "-"},
-                {"-", "-", "-"},
-        };
+        //Initialize variables and fill gameBoard
+        String[][] gameBoard = new String[size][size];
+        for(int i = 0; i < size; i++){
+            for(int j = 0; j < size; j++){
+                gameBoard[i][j] = "-";
+            }
+        }
+
         String playerMark = "O";
         Scanner in = new Scanner(System.in);
-        int input = 0;
-        int row = 0;
-        int column = 0;
+        int input;
+        int row;
+        int column;
+        int count = 0;
 
 
-        while(true){
+        while(true) {
+            //Prints game board
             printBoard(gameBoard);
 
             //Get player input.
-            while(true) {
+            while (true) {
                 System.out.println("Player " + playerMark + ", choose where to place your mark. In the form \"RC\"");
                 input = in.nextInt();
                 row = (input % 10);
                 column = (input / 10);
 
                 //Checks if response is valid
-                if(row >= 3 || column >= 3)
+                if (row >= size || column >= size)
                     System.out.println("That response is invalid");
-                else if(checkPlace(row, column, gameBoard))
+                else if (checkPlace(row, column, gameBoard))
                     System.out.println("That spot is taken");
-                else if(row <= 2 && column <= 2)
+                else if (row <= (size - 1) && column <= (size - 1))
                     break;
             }
 
             gameBoard = playTurn(gameBoard, playerMark, row, column);
-            if(checkWin(gameBoard, playerMark))
+            if (checkWin(gameBoard, playerMark)){
+                //Announce winner.
+                System.out.println("Player " + playerMark + " wins!");
                 break;
+            }
             playerMark = switchPlayer(playerMark);
-        }
 
-        //Announce winner.
-        System.out.println("Player " + playerMark + " wins!");
+            //Checks if there is a draw.
+            if(checkDraw(count)) {
+                System.out.println("It's a tie!");
+                break;
+            }
+            count++;
+        }
     }
 
     //Print the current state of the tic tac toe game board.
     public static void printBoard(String[][] board){
-        for(int i = 0; i < 3; i++){
+        for(int i = 0; i < size; i++){
             System.out.print("\n" + i + " ");
-            for(int j = 0; j < 3; j++){
+            for(int j = 0; j < size; j++)
                 System.out.print(board[j][i] + " ");
-            }
         }
-        System.out.println("\n  0 1 2");
+        System.out.println("");
+        System.out.print(" ");
+        for(int i = 0; i < size; i++)
+            System.out.print(" " + i);
+        System.out.println();
     }
 
     //Player places their mark wherever they choose.
@@ -77,21 +97,30 @@ public class TicTacToePvP {
     //Check rows, columns, and diagonals to see if someone has won.
     public static boolean checkWin(String[][] board, String player){
         //Check rows and columns
-        String toCheckRow = "";
-        String toCheckColumn = "";
-        for(int i = 0; i < 3; i++){
-            for(int j = 0; j < 3; j++){
-                toCheckRow += board[i][j];
-                toCheckColumn += board[j][i];
+        int toCheckRow = 0;
+        int toCheckColumn = 0;
+        for(int i = 0; i < size; i++){
+            for(int j = 0; j < size; j++){
+                if(board[i][j].equals(player))
+                    toCheckRow++;
+                if(board[j][i].equals(player))
+                    toCheckColumn++;
             }
-            if(toCheckRow.equals("XXX") || toCheckRow.equals("OOO") || toCheckColumn.equals("XXX") || toCheckColumn.equals("OOO"))
+            if(toCheckRow == size || toCheckColumn == size)
                 return true;
-            toCheckRow = "";
-            toCheckColumn = "";
+            toCheckRow = 0;
+            toCheckColumn = 0;
         }
 
         //Check diagonals
-
+        for(int i = 0; i < size; i++){
+            if(board[i][i].equals(player))
+                toCheckRow++;
+            if(board[i][(size-1)-i].equals(player))
+                toCheckColumn++;
+        }
+        if(toCheckRow == size || toCheckColumn == size)
+            return true;
 
         return false;
     }
@@ -102,5 +131,11 @@ public class TicTacToePvP {
             return "O";
         else
             return "X";
+    }
+
+    public static boolean checkDraw(int count){
+        if (count == ((size*size)-1))
+            return true;
+        return false;
     }
 }

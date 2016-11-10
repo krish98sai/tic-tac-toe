@@ -16,6 +16,7 @@ playTurn() - Player places their mark wherever they choose.
 checkPlace() - Checks if that position on the board is taken or not.
 switchPlayer() - Sets the marker from "O" to "X", vise versa.
 checkWin() - Check rows, columns, and diagonals to see if someone has won.
+checkDraw() - Checks to see it the game is a tie.
 
 TicTacToePvE
 
