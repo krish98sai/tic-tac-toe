@@ -13,6 +13,7 @@ Procedure:
 Methods:
 printBoard() - Print the current state of the tic tac toe game board.
 playTurn() - Player places their mark wherever they choose.
+checkPlace() - Checks if that position on the board is taken or not.
 switchPlayer() - Sets the marker from "O" to "X", vise versa.
 checkWin() - Check rows, columns, and diagonals to see if someone has won.
 
