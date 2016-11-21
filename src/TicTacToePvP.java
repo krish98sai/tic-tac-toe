@@ -9,18 +9,13 @@ import java.util.Scanner;
 
 public class TicTacToePvP {
 
-    private static int size = 3;
+    private static Scanner in = new Scanner(System.in);
+    private static int size = in.nextInt();
 
     public static void main(String[] args){
 
-        //Initialize variables and fill gameBoard
+        //Initialize variables.
         String[][] gameBoard = new String[size][size];
-        for(int i = 0; i < size; i++){
-            for(int j = 0; j < size; j++){
-                gameBoard[i][j] = "-";
-            }
-        }
-
         String playerMark = "O";
         Scanner in = new Scanner(System.in);
         int input;
@@ -28,9 +23,15 @@ public class TicTacToePvP {
         int column;
         int count = 0;
 
+        //Fill gameBoard.
+        for(int i = 0; i < size; i++){
+            for(int j = 0; j < size; j++){
+                gameBoard[i][j] = "-";
+            }
+        }
 
         while(true) {
-            //Prints game board
+            //Prints game board.
             printBoard(gameBoard);
 
             //Get player input.

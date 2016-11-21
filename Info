@@ -21,12 +21,23 @@ checkDraw() - Checks to see it the game is a tie.
 TicTacToePvE
 
 Procedure:
+1. Print game board.
+2. Player one chooses where to place their mark.
+3. Check for a win.
+4. Computer chooses where to place their mark.
+5. Check for a win.
+6. Repeat until someone wins.
 
 Methods:
-
+printBoard() - Print the current state of the tic tac toe game board.
+playTurn() - Player places their mark wherever they choose.
+checkPlace() - Checks if that position on the board is taken or not.
+switchPlayer() - Sets the marker from "O" to "X", vise versa.
+checkWin() - Check rows, columns, and diagonals to see if someone has won.
+checkDraw() - Checks to see it the game is a tie.
 
 TicTacToePvE3D
 
 Procedure:
 
-Methods
+Methods:
