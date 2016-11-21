@@ -51,11 +51,13 @@ public class TicTacToePvP {
             }
 
             gameBoard = playTurn(gameBoard, playerMark, row, column);
+
             if (checkWin(gameBoard, playerMark)){
                 //Announce winner.
                 System.out.println("Player " + playerMark + " wins!");
                 break;
             }
+
             playerMark = switchPlayer(playerMark);
 
             //Checks if there is a draw.
