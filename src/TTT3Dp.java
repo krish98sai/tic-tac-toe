@@ -29,11 +29,50 @@ public class TTT3Dp {
                 column = (file.nextInt())%4;
                 turn = file.nextInt();
 
-                board = fillBoard(board, level, row, column, turn);
+                if(validTurn(level, row, column, turn))
+                    board = fillBoard(board, level, row, column, turn);
+                numberOfEntries--;
             }
         }
 
         //Print the game board.
+        printBoard(board);
+
+    }
+
+    //Print the game board
+    public static void printBoard(int[][][] board) {
+        String spacing;
+        int toPrint;
+        for(int i = 3; i >= 0; i--){
+            spacing = "    ";
+            for(int j = 3; j >= 0; j--){
+                System.out.print(spacing + i + "" + j + "  ");
+                for(int k = 0; k < 4; k++){
+                    toPrint = board[i][j][k];
+                    if(toPrint == 5)
+                        System.out.print("X");
+                    else if(toPrint == 1)
+                        System.out.print("O");
+                    else
+                        System.out.print("_");
+                    System.out.print(" ");
+                }
+                System.out.println();
+                spacing = spacing.substring(0, spacing.length()-1);
+            }
+            System.out.println();
+        }
+        System.out.println("    0 1 2 3");
+    }
+
+    //Checks to see if the values entered are a valid turn.
+    public static boolean validTurn(int level, int row, int column, int turn) {
+        if(level < 4 && row < 4 && column < 4){
+            if(turn == 1 || turn == 5)
+                return true;
+        }
+        return false;
     }
 
     //Flood the board with a floodValue (0, 1, 5).
@@ -53,5 +92,4 @@ public class TTT3Dp {
         board[level][row][column] = turn;
         return board;
     }
-
 }
