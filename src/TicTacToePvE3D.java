@@ -18,6 +18,7 @@ import java.util.Random;
 
 public class TicTacToePvE3D {
 
+    static Random rand = new Random();
     static int[] sums = new int[76];
     static final int[][][] lines = {
             {{0,0,0},{0,0,1},{0,0,2},{0,0,3}},  //lev 0; row 0   rows in each level
@@ -101,10 +102,7 @@ public class TicTacToePvE3D {
     public static void main(String[] args) throws FileNotFoundException{
 
         //Initializing variables.
-        String a = args[0];
-        Scanner file = null;
-        if(a != null)
-            file = new Scanner(new FileInputStream(a));
+        Scanner file = new Scanner(new FileInputStream(args[0]));
         Scanner in = new Scanner(System.in);
         int turn;
         int level;
@@ -140,10 +138,12 @@ public class TicTacToePvE3D {
         turn = 5;
 
         while(!win){
-            //Print the game board.
-            printBoard(board);
 
             if(turn == 5){
+
+                //Print the game board.
+                printBoard(board);
+
                 //Player's turn.
                 while(true){
                     System.out.println("Type your move as one three digit number (LRC).");
@@ -199,9 +199,13 @@ public class TicTacToePvE3D {
     }
 
     private static int[][][] findComputerWin(int[][][] board, int turn) {
-        int position = findLineSum(turn*3);
+        int position = findLineSum(turn*3, 0);
         if(position < 99){
-
+            int[] pointToTake = findEmptyCell(lines[position], board);
+            int level = pointToTake[0];
+            int row = pointToTake[1];
+            int column = pointToTake[2];
+            board = fillBoard(board, level, row, column, turn);
         }
         else
             board = findBlock(board, turn);
@@ -209,7 +213,13 @@ public class TicTacToePvE3D {
     }
 
     private static int[][][] findBlock(int[][][] board, int turn) {
-        if(){
+        int position = findLineSum(15, 0);
+        if(position < 99){
+            int[] pointToTake = findEmptyCell(lines[position], board);
+            int level = pointToTake[0];
+            int row = pointToTake[1];
+            int column = pointToTake[2];
+            board = fillBoard(board, level, row, column,turn);
         }
         else
             board = findComputerFork(board, turn);
@@ -217,7 +227,26 @@ public class TicTacToePvE3D {
     }
 
     private static int[][][] findComputerFork(int[][][] board, int turn) {
-        if(){
+        int position1;
+        int position2;
+        int[] pointToTake = null;
+        int i;
+        for(i = 0; i < 76; i++){
+            position1 = findLineSum(turn*2, i);
+            position2 = findLineSum(turn*2, position1);
+
+            if (position1 < 99 && position2 < 99) {
+                pointToTake = findCommonEmptyCell(board, lines[position1], lines[position2]);
+                if(pointToTake != null)
+                    break;
+            }
+        }
+
+        if(i != 76){
+            int level = pointToTake[0];
+            int row = pointToTake[1];
+            int column = pointToTake[2];
+            board = fillBoard(board, level, row, column,turn);
         }
         else
             board = findUserFork(board, turn);
@@ -225,7 +254,47 @@ public class TicTacToePvE3D {
     }
 
     private static int[][][] findUserFork(int[][][] board, int turn) {
-        if(){
+        int position1;
+        int position2;
+        int[] pointToTake = null;
+        int i;
+        for(i = 0; i < 76; i++){
+            position1 = findLineSum(10, i);
+            position2 = findLineSum(10, position1);
+            if(position1 < 99 && position2 < 99){
+                pointToTake = findCommonEmptyCell(board, lines[position1], lines[position2]);
+                if(pointToTake != null)
+                    break;
+            }
+        }
+
+        if(i != 76){
+            int level = pointToTake[0];
+            int row = pointToTake[1];
+            int column = pointToTake[2];
+            board = fillBoard(board, level, row, column,turn);
+        }
+        else
+            board = findNotDead(board, turn);
+        return board;
+    }
+
+    private static int[][][] findNotDead(int[][][] board, int turn) {
+        int position1 = findLineSum(turn, 0);
+        int position2 = findLineSum(turn*2, 0);
+        if(position2 < 99){
+            int[] pointToTake = findEmptyCell(lines[position2],board);
+            int level = pointToTake[0];
+            int row = pointToTake[1];
+            int column = pointToTake[2];
+            board = fillBoard(board, level, row, column, turn);
+        }
+        else if(position1 < 99){
+            int[] pointToTake = findEmptyCell(lines[position1],board);
+            int level = pointToTake[0];
+            int row = pointToTake[1];
+            int column = pointToTake[2];
+            board = fillBoard(board, level, row, column, turn);
         }
         else
             board = findRandomly(board, turn);
@@ -233,11 +302,26 @@ public class TicTacToePvE3D {
     }
 
     private static int[][][] findRandomly(int[][][] board, int turn) {
+        int randomNum;
+        int[] pointToTake;
+        while(true){
+            randomNum = rand.nextInt(76);
+            pointToTake = findEmptyCell(lines[randomNum], board);
+
+            if(pointToTake != null){
+                int level = pointToTake[0];
+                int row = pointToTake[1];
+                int column = pointToTake[2];
+                board = fillBoard(board, level, row, column, turn);
+                break;
+            }
+        }
+        return board;
     }
 
     //Checks to see if the player whose turn it is has won.
     public static boolean checkWin(int turn) {
-        int winPosition = findLineSum(4*turn);
+        int winPosition = findLineSum(4*turn, 0);
 
         if(winPosition < 99)
             return true;
@@ -319,6 +403,8 @@ public class TicTacToePvE3D {
             return 5;
     }
 
+    //Methods beyond this point are inspired by BoardTest.java by Delbert Bailey
+
     //Gets the sums on all of the line combinations on the board and puts them in a sum array.
     public static void collectLineSums(int[][][] board){
         for (int i = 0; i < 76; i++){
@@ -330,11 +416,53 @@ public class TicTacToePvE3D {
     }
 
     //Finds a line with a certain sum and returns its position.
-    public static int findLineSum(int sum){
-        for (int i = 0; i < 76; i++){
+    public static int findLineSum(int sum, int startAt){
+        for (int i = startAt; i < 76; i++){
             if (sums[i] == sum)
                 return i;
         }
         return 100;
+    }
+
+    public static int[] findEmptyCell(int[][] line, int[][][] board){
+        for (int i = 0; i < 4; i++){
+            if (isCellEmpty(line[i], board))
+                return line[i];
+        }
+        return null;
+    }
+
+    public static boolean isCellEmpty(int[] celAdr, int[][][] board){
+        if (board[celAdr[0]][celAdr[1]][celAdr[2]] == 0)
+            return true;
+        else
+            return false;
+    }
+
+    public static int[] findCommonEmptyCell(int[][][] board, int[][] line1, int[][] line2){
+        for (int i = 0; i < line1.length; i++ ){
+            for (int j = 0; j < line1.length; j++ ){
+                if (isEmpty(line1[i], board) && isEmpty(line2[j], board) && isEqual(line1[i], line2[j]))
+                    return line1[i];
+            }
+        }
+        return null;
+    }
+
+    //Checks if two cells are in the same position.
+    public static boolean isEqual(int[] a, int[] b){
+        for (int i = 0; i < a.length; i++){
+            if (a[i] != b[i])
+                return false;
+        }
+        return true;
+    }
+
+    //Checks if the cell is empty.
+    public static boolean isEmpty(int[] celAdr, int[][][] board){
+        if (board[celAdr[0]][celAdr[1]][celAdr[2]] == 0)
+            return true;
+        else
+            return false;
     }
 }
